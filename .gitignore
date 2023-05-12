@@ -1,0 +1,10 @@
+.bsp/
+.idea/
+project/project/
+project/target/
+src/project
+target/
+.DS_Store
+build-artifacts/
+.metals
+.vscode
