@@ -59,8 +59,6 @@ class DataFrameTest extends AnyFunSuite with BeforeAndAfter{
     val productIdx = top2Sale(1).fieldIndex("product")
     println(top2Sale(1).get(productIdx))
 
-    //accessing/transforming individual elements of Row (distributed)
-
   }
 
   test ("mapping a dataframe: needs a row encoder"){

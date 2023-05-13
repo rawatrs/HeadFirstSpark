@@ -2,7 +2,7 @@ package com.reena.explore
 
 import com.reena.explore.data.CricketData
 import com.reena.explore.io.Reader
-import com.reena.explore.utils.SparkUtils
+import com.reena.explore.utils.{NullCounter, SparkUtils}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 import org.apache.log4j._
@@ -104,16 +104,9 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
   }
 
   test("null count using dataframe, programmatically iterating columns and rows ") {
-  //    find no of nulls or missing value in each column
-          def countNulls(columns: Array[String]): Array[Column] = {
-            columns.map ( c => {
-              count(when(col(c).isNull, c))
-              //count(when(col(c).isNull, c)).alias(c)
-            })
-          }
 
-          cricketDF.select(countNulls(cricketDS.columns):_*).show()
-
+          //find no of nulls or missing value in each column
+          NullCounter.nullCount(cricketDF).show()
   }
 
 
