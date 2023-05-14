@@ -37,6 +37,7 @@ object DataFrame {
     people.select("name").show()
     people.filter(people("age") < 21).show(5)
     people.groupBy("age").count().orderBy(desc("age")).show()
+    people.groupBy("age").agg(sum("friends").alias("friends")).orderBy(asc("friends")).show()
 
   }
 }
