@@ -58,24 +58,6 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
       ds5.show()
   }
 
-  /*
-  }
-
-  test("create ML pipeline") {
-
-    val sampleDS = spark.createDataset(Seq(
-      SampleData(1, "L101", "R"),
-      SampleData(2, "L201", "C"),
-      SampleData(3, "D111", "R"),
-      SampleData(4, "F210", "C"),
-      SampleData(5, "D110", "R")
-    ))
-
-    sampleDS.show()
-
-    sampleDS.describe().show()
-  }*/
-
   test("null count dataset") {
     val detailNullCount = cricketDS.map(x => {
       if (x.Detail == None) 1 else 0
@@ -122,21 +104,15 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
       cricketDS.show(3)
 
       //find no of nulls or missing value in each column
-//      def countNulls(columns: Array[String]): Array[Column] = {
-//        columns.map ( c => {
-//          count(when(c.isNull, c)).alias(c)
-//        })
-//      }
 
-    //      cricketDS.select(countNulls(cricketDS.columns):_*).show()
-
+      //find the no of unique counts for a category, say, Batsman_Name
+      cricketDS.select("Batsman_Name").count()
   }
 
   test("1: Binning operation") {
     val testDS = spark.range(1,100)
     testDS.show()
 
-    //testDS.withColumn("idRange", )
   }
 
   test("2: Onehot encoding") {
@@ -166,7 +142,4 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
   test("9: Geospatial features") {
 
   }
-
-
-
 }
