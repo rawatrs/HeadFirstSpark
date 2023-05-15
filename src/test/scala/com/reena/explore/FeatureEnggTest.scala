@@ -2,11 +2,13 @@ package com.reena.explore
 
 import com.reena.explore.data.CricketData
 import com.reena.explore.io.Reader
-import com.reena.explore.utils.SparkUtils
+import com.reena.explore.utils.{NullCounter, SparkUtils}
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 import org.apache.log4j._
+import org.apache.spark.sql.Column
 import org.apache.spark.sql.functions._
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
 case class bespoke(state: String, city: String, count: BigInt)
 case class Book(name: String, cost: Int)
@@ -56,11 +58,45 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
       ds5.show()
   }
 
+  test("null count dataset") {
+    val detailNullCount = cricketDS.map(x => {
+      if (x.Detail == None) 1 else 0
+    }).reduce(_ + _)
+
+    println(s"detailNullCount=$detailNullCount")
+    detailNullCount shouldBe(565)
+  }
+
+  test("null count sql") {
+    cricketDF.createOrReplaceTempView("cricket")
+
+    spark.sql(
+      """
+        |select count(*) as Detail from cricket
+        |where detail is null
+        |""".stripMargin).show()
+
+    spark.sql(
+      """
+        |select
+        | sum(CASE WHEN (detail is null) then 1 else 0 end) as detail_nulls,
+        | sum(CASE WHEN (isboundary is null) then 1 else 0 end) as isboundary_nulls
+        | from cricket
+        |""".stripMargin).show()
+  }
+
+  test("null count using dataframe, programmatically iterating columns and rows ") {
+
+          //find no of nulls or missing value in each column
+          NullCounter.nullCount(cricketDF).show()
+  }
+
+
   test("transformations") {
       //check data
-      cricketDS.printSchema()
 
-      //drop unwanted columns
+    cricketDS.printSchema()
+    //drop unwanted columns
       cricketDS.drop("Batsman", "Bowler", "id")
 
       //explore the data
@@ -68,18 +104,9 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
       cricketDS.show(3)
 
       //find no of nulls or missing value in each column
-      /*def countNulls(columns: Array[String]): Array[Column] = {
-        columns.map ( c => {
-          count(when(c.isNull, c)).alias(c)
-        })
-      }
 
-      cricketDS.select(countNulls(cricketDS.columns):_*).show()
-*/
       //find the no of unique counts for a category, say, Batsman_Name
       cricketDS.select("Batsman_Name").count()
-
-      //Encode categorical values
   }
 
   test("1: Binning operation") {
@@ -115,7 +142,4 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
   test("9: Geospatial features") {
 
   }
-
-
-
 }
