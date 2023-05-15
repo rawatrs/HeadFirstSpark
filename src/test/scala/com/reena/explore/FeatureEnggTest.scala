@@ -56,24 +56,6 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
       ds5.show()
   }
 
-  /*
-  }
-
-  test("create ML pipeline") {
-
-    val sampleDS = spark.createDataset(Seq(
-      SampleData(1, "L101", "R"),
-      SampleData(2, "L201", "C"),
-      SampleData(3, "D111", "R"),
-      SampleData(4, "F210", "C"),
-      SampleData(5, "D110", "R")
-    ))
-
-    sampleDS.show()
-
-    sampleDS.describe().show()
-  }*/
-
   test("transformations") {
       //check data
       cricketDS.printSchema()
@@ -98,16 +80,12 @@ class FeatureEnggTest extends AnyFunSuite with BeforeAndAfter{
       cricketDS.select("Batsman_Name").count()
 
       //Encode categorical values
-
-
-      //
   }
 
   test("1: Binning operation") {
     val testDS = spark.range(1,100)
     testDS.show()
 
-    //testDS.withColumn("idRange", )
   }
 
   test("2: Onehot encoding") {
