@@ -108,8 +108,6 @@ class ReaderTest extends AnyFunSuite with BeforeAndAfter{
     transactionDS.select("payment").distinct().show()
   }
 
-
-
   test("3: combine customer and fact data") {
     val customerFactDS = customerDS.join(factDS,
       customerDS("customerid") === factDS("customerid"), "inner")
